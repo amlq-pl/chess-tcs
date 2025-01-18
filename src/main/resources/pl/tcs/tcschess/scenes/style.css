@@ -1,0 +1,30 @@
+.button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 10 20;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-font-size: 50px;
+    -fx-border-color: #388E3C;
+    -fx-border-width: 2px;
+    -fx-cursor: hand; /* Changes the cursor to a pointer */
+    -fx-min-height: 100px;
+    -fx-min-width: 200px;
+}
+
+.button:hover {
+    -fx-background-color: #45A049; /* Darker green when hovered */
+}
+
+.button:pressed {
+    -fx-background-color: #388E3C; /* Even darker green when pressed */
+}
+
+.label {
+    -fx-font-size: 100px; /* Bigger size for prominence */
+    -fx-font-family: "Arial Black", "Verdana", sans-serif; /* Bold and decorative font */
+    -fx-text-fill: white; /* White text color */
+    -fx-effect: dropshadow( one-pass-box , black , 5 , 0.5 , 1 , 1 ); /* Black shadow for depth */
+    -fx-stroke: black; /* Black outline */
+    -fx-stroke-width: 10; /* Outline thickness */
+}
