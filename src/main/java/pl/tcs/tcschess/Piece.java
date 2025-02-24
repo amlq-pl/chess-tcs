@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 public class Piece extends ImageView {
     private PieceColor color;
     private Type type;
+    private boolean hasMoved = false;
 
     public Piece() {
         this.color = PieceColor.NONE;
@@ -29,5 +30,13 @@ public class Piece extends ImageView {
 
     public Type getType() {
         return type;
+    }
+
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    public void setHasMovedTrue() {
+        hasMoved = true;
     }
 }

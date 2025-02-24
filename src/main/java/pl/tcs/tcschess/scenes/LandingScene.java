@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import pl.tcs.tcschess.Board;
+import pl.tcs.tcschess.BoardPane;
 import pl.tcs.tcschess.SceneManager;
 
 import java.util.Objects;
@@ -15,14 +15,14 @@ import java.util.Objects;
 public class LandingScene extends Scene {
     private final SceneManager sceneManager;
     public LandingScene(SceneManager sceneManager) {
-        super(new StackPane(), 1000, 1000); // Base layout and size
+        super(new StackPane(), 800, 800); // Base layout and size
         this.sceneManager = sceneManager;
         initializeScene((StackPane) getRoot());
     }
 
     private void initializeScene(StackPane root) {
         root.setPadding(new Insets(20));
-        Board board = new Board(1000 - 20 * 2);
+        BoardPane board = new BoardPane(800 - 20 * 2);
 
         Label title = new Label("TCS Chess");
         title.getStyleClass().add("title");

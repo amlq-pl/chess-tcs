@@ -9,9 +9,13 @@ public class Tile extends StackPane {
     private Piece piece = null;
     private final PieceColor pieceColor;
     private final int size;
+    public int row;
+    public int col;
 
-    public Tile(PieceColor pieceColor, int size) {
+    public Tile(PieceColor pieceColor, int size, int row, int col) {
         super();
+        this.row = row;
+        this.col = col;
         this.size = size;
         this.pieceColor = pieceColor;
         this.rectangle = new Rectangle((double) this.size /8, (double) this.size /8);
@@ -58,5 +62,14 @@ public class Tile extends StackPane {
         } else {
             this.rectangle.setFill(Color.SANDYBROWN);
         }
+    }
+
+    public String getPosition() {
+        String letters = "ABCDEFGH";
+        int[] nums = {1, 2, 3, 4, 5, 6, 7, 8};
+        StringBuilder position = new StringBuilder();
+        position.append(letters.charAt(row));
+        position.append(nums[7-col]);
+        return position.toString();
     }
 }

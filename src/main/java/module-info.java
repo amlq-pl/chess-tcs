@@ -5,6 +5,7 @@ module pl.tcs.tcschess {
     requires org.controlsfx.controls;
     requires jdk.jshell;
     requires java.desktop;
+    requires chesslib;
 
     opens pl.tcs.tcschess to javafx.fxml;
     exports pl.tcs.tcschess;
