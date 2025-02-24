@@ -6,9 +6,12 @@ import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -76,13 +79,17 @@ public class BoardPane extends GridPane {
                 String from = clickedTile.getPosition();
                 List<Move> legal = board.legalMoves();
                 System.out.println(legal);
-                Move move = new Move(from + p, board.getSideToMove());
+                Move move = getMove(from, p, legal);
 
                 if (legal.contains(move)) {
+                    PieceColor color = clickedTile.getPiece().getColor();
                     Piece piece = clickedTile.getPiece();
                     clickedTile.removePiece();
                     tile.removePiece();
-                    tile.setPiece(piece);
+                    if (move.getPromotion() != com.github.bhlangonijr.chesslib.Piece.NONE) {
+                        com.github.bhlangonijr.chesslib.Piece promotion = move.getPromotion();
+                        tile.setPiece(new Piece(promotion, color));
+                    } else tile.setPiece(piece);
                     if (board.getEnPassant() != Square.NONE && board.getEnPassant().toString().equals(p)) {
                         Square enPassant = board.getEnPassantTarget();
                         Tile t = TileMap.get(enPassant.toString());
@@ -139,6 +146,75 @@ public class BoardPane extends GridPane {
             alert.setTitle("Remis");
             alert.show();
             gameOver = true;
+        }
+    }
+
+    private Move getMove(String from, String p, List<Move> legal) {
+        Move move = new Move(from + p, board.getSideToMove());
+
+        // promotion
+        String promotionChoice = "";
+        if (legal.contains(new Move(from + p + 'q', board.getSideToMove()))) {
+            Stage stage = new Stage();
+            PromotionPopUp popUp = new PromotionPopUp(board.getSideToMove(), stage, promotionChoice);
+            Scene scene = new Scene(popUp);
+            stage.setScene(scene);
+            stage.sizeToScene();
+            stage.setResizable(false);
+            stage.showAndWait();
+
+            move = new Move(from + p + popUp.getChoice(), board.getSideToMove());
+        }
+        System.out.println(move);
+        return move;
+    }
+
+    static class PromotionPopUp extends HBox {
+        private final PieceColor color;
+        private final Stage stage;
+        private String choice;
+        public PromotionPopUp(Side side, Stage stage, String choice) {
+            super();
+            this.color = (side == Side.WHITE) ? PieceColor.WHITE : PieceColor.BLACK;
+            this.stage = stage;
+            this.choice = choice;
+            setFillHeight(false);
+            init();
+        }
+        
+        private void init() {
+            Tile knight = new Tile(this.color, 40, 0, 0);
+            Tile bishop = new Tile(this.color, 40, 0, 0);
+            Tile rook = new Tile(this.color, 40, 0, 0);
+            Tile queen = new Tile(this.color, 40, 0, 0);
+            
+            knight.setPiece(new Piece(Type.KNIGHT, this.color));
+            bishop.setPiece(new Piece(Type.BISHOP, this.color));
+            rook.setPiece(new Piece(Type.ROOK, this.color));
+            queen.setPiece(new Piece(Type.QUEEN, this.color));
+            
+            knight.setOnMouseClicked(mouseEvent -> {
+                choice = "n";
+                stage.close();
+            });
+            bishop.setOnMouseClicked(mouseEvent -> {
+                choice = "b";
+                stage.close();
+            });
+            rook.setOnMouseClicked(mouseEvent -> {
+                choice = "r";
+                stage.close();
+            });
+            queen.setOnMouseClicked(mouseEvent -> {
+                choice = "q";
+                stage.close();
+            });
+            
+            getChildren().addAll(knight, bishop, rook, queen);
+        }
+
+        public String getChoice() {
+            return choice;
         }
     }
 }

@@ -24,6 +24,18 @@ public class Piece extends ImageView {
         setPreserveRatio(true);
     }
 
+    public Piece(com.github.bhlangonijr.chesslib.Piece type, PieceColor color) {
+        super();
+        this.color = color;
+
+        String path = color.toString().toLowerCase().charAt(0) + type.toString().toLowerCase().substring(6) + ".png";
+        System.out.println(path);
+
+        Image image = new Image(path);
+        setImage(image);
+        setPreserveRatio(true);
+    }
+
     public PieceColor getColor() {
         return color;
     }
