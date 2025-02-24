@@ -71,6 +71,7 @@ public class BoardPane extends GridPane {
     public void handleTileClick(Tile tile) {
         if (gameOver) return;
         String p = tile.getPosition();
+        System.out.println(tile.row + " " + tile.col);
 
         if (clickedTile != null) {
             if (tile == clickedTile) {
@@ -82,31 +83,60 @@ public class BoardPane extends GridPane {
                 Move move = getMove(from, p, legal);
 
                 if (legal.contains(move)) {
-                    PieceColor color = clickedTile.getPiece().getColor();
-                    Piece piece = clickedTile.getPiece();
-                    clickedTile.removePiece();
-                    tile.removePiece();
-                    if (move.getPromotion() != com.github.bhlangonijr.chesslib.Piece.NONE) {
-                        com.github.bhlangonijr.chesslib.Piece promotion = move.getPromotion();
-                        tile.setPiece(new Piece(promotion, color));
-                    } else tile.setPiece(piece);
-                    if (board.getEnPassant() != Square.NONE && board.getEnPassant().toString().equals(p)) {
-                        Square enPassant = board.getEnPassantTarget();
-                        Tile t = TileMap.get(enPassant.toString());
-                        t.removePiece();
-                    }
-                    Side side = board.getSideToMove();
-                    board.doMove(move);
-                    System.out.println(board.toString());
                     String note = "";
+                    Side side = board.getSideToMove();
                     if (side == Side.WHITE) {
                         cnt++;
                         note += cnt + ".";
                     }
-                    note += " " + board.getPiece(move.getTo()).getSanSymbol();
-                    note += move.getTo().toString();
-                    if (board.isMated()) note += "#";
-                    else if (board.isKingAttacked()) note += "+";
+                    PieceColor color = clickedTile.getPiece().getColor();
+                    Piece piece = clickedTile.getPiece();
+                    clickedTile.removePiece();
+                    if (move.toString().equals("e1g1") || move.toString().equals("e1c1")
+                            || move.toString().equals("e8c8") || move.toString().equals("e8g8")) {
+                        if (move.toString().equals("e1g1")) {
+                            Piece tmp = tiles[7][7].getPiece();
+                            tiles[7][7].removePiece();
+                            tiles[5][7].setPiece(tmp);
+                            note += " O-O";
+                        } else if (move.toString().equals("e1c1")) {
+                            Piece tmp = tiles[0][7].getPiece();
+                            tiles[0][7].removePiece();
+                            tiles[3][7].setPiece(tmp);
+                            note += " O-O-O";
+                        } else if (move.toString().equals("e8c8")) {
+                            Piece tmp = tiles[0][0].getPiece();
+                            tiles[0][0].removePiece();
+                            tiles[3][0].setPiece(tmp);
+                            note += " O-O-O";
+                        } else if (move.toString().equals("e8g8")) {
+                            Piece tmp = tiles[7][0].getPiece();
+                            tiles[7][0].removePiece();
+                            tiles[5][0].setPiece(tmp);
+                            note += " O-O";
+                        }
+                        tile.setPiece(piece);
+                        board.doMove(move);
+                    } else {
+                        tile.removePiece();
+                        if (move.getPromotion() != com.github.bhlangonijr.chesslib.Piece.NONE) {
+                            com.github.bhlangonijr.chesslib.Piece promotion = move.getPromotion();
+                            tile.setPiece(new Piece(promotion, color));
+                        } else tile.setPiece(piece);
+                        if (board.getEnPassant() != Square.NONE && board.getEnPassant().toString().equals(p)) {
+                            Square enPassant = board.getEnPassantTarget();
+                            Tile t = TileMap.get(enPassant.toString());
+                            t.removePiece();
+                        }
+
+                        board.doMove(move);
+                        System.out.println(board.toString());
+
+                        note += " " + board.getPiece(move.getTo()).getSanSymbol();
+                        note += move.getTo().toString();
+                        if (board.isMated()) note += "#";
+                        else if (board.isKingAttacked()) note += "+";
+                    }
                     if (side == Side.BLACK) {
                         note += "\n";
                     } else note += " ";
